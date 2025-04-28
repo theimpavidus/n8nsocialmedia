@@ -1,9 +1,9 @@
 {
-  "id": "1",
-  "name": "Peptide Data Collection",
+  "name": "Peptide Content Analysis",
   "nodes": [],
   "connections": {},
-  "active": false,
   "settings": {},
-  "versionId": "53ebaa76-622c-4b10-a766-d92b2d3ae61a"
+  "active": false,
+  "versionId": "d5adb0e2-0994-43ce-a27c-598c5296d362",
+  "id": "7fa7ca67-4bbb-4156-b2ac-54e23aedaf6f"
 }
