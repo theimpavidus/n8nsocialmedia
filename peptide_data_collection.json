@@ -135,30 +135,6 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [1000, 400]
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "collection": "content_items",
-        "fields": {
-          "platform": "{{ $json.platform }}",
-          "title": "{{ $json.title }}",
-          "url": "{{ $json.url }}",
-          "score": "{{ $json.score }}",
-          "timestamp": "{{ $now }}"
-        }
-      },
-      "id": "8",
-      "name": "Store Content",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [1250, 400],
-      "credentials": {
-        "mongoDb": {
-          "id": "mongodb-credential-id",
-          "name": "MongoDB"
-        }
-      }
     }
   ],
   "connections": {
@@ -239,17 +215,6 @@
             "node": "Normalize & Score",
             "type": "main",
             "index": 3
-          }
-        ]
-      ]
-    },
-    "Normalize & Score": {
-      "main": [
-        [
-          {
-            "node": "Store Content",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
