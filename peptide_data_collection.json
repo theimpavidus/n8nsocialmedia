@@ -2,121 +2,138 @@
   "name": "Peptide Data Collection",
   "nodes": [
     {
-      "id": "1",
-      "name": "DC Cron",
-      "type": "n8n-nodes-base.cron",
-      "typeVersion": 1,
-      "position": [
-        200,
-        300
-      ],
       "parameters": {
         "triggerTimes": [
           {
             "cronExpression": "0 6 * * *"
           }
         ]
-      }
+      },
+      "id": "1",
+      "name": "DC Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
     },
     {
+      "parameters": {
+        "functionCode": "return [{ json: { searchTerms: [\"peptide therapy\", \"BPC-157\", \"TB-500\", \"GLP-1\", \"Retatrutide\", \"peptide injection\", \"peptide benefits\"] } }];"
+      },
       "id": "2",
       "name": "Generate Terms",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        400,
+        450,
         300
-      ],
-      "parameters": {
-        "functionCode": "return [{ json: { searchTerms: [ \"peptide therapy\",\"BPC-157\",\"TB-500\",\"GLP-1\",\"Retatrutide\",\"peptide injection\",\"peptide benefits\"] } }];"
-      }
+      ]
     },
     {
+      "parameters": {
+        "url": "https://www.googleapis.com/youtube/v3/search",
+        "method": "GET",
+        "responseFormat": "json",
+        "queryParametersUi": {
+          "parameter": []
+        },
+        "options": {}
+      },
       "id": "3",
       "name": "YouTube Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        650,
+        700,
         200
-      ],
-      "parameters": {
-        "url": "https://www.googleapis.com/youtube/v3/search",
-        "method": "GET",
-        "responseFormat": "json"
-      }
+      ]
     },
     {
+      "parameters": {
+        "url": "https://api.tikapi.io/public/search",
+        "method": "GET",
+        "responseFormat": "json",
+        "queryParametersUi": {
+          "parameter": []
+        },
+        "options": {}
+      },
       "id": "4",
       "name": "TikTok Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        650,
+        700,
         350
-      ],
-      "parameters": {
-        "url": "https://api.tikapi.io/public/search",
-        "method": "GET",
-        "responseFormat": "json"
-      }
+      ]
     },
     {
+      "parameters": {
+        "url": "https://graph.facebook.com/v18.0/ig_hashtag_search",
+        "method": "GET",
+        "responseFormat": "json",
+        "queryParametersUi": {
+          "parameter": []
+        },
+        "options": {}
+      },
       "id": "5",
       "name": "IG Hashtag Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        650,
+        700,
         500
-      ],
-      "parameters": {
-        "url": "https://graph.facebook.com/v18.0/ig_hashtag_search",
-        "method": "GET",
-        "responseFormat": "json"
-      }
+      ]
     },
     {
+      "parameters": {
+        "url": "https://api.twitter.com/2/tweets/search/recent",
+        "method": "GET",
+        "responseFormat": "json",
+        "queryParametersUi": {
+          "parameter": []
+        },
+        "options": {}
+      },
       "id": "6",
       "name": "Twitter Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        650,
+        700,
         650
-      ],
-      "parameters": {
-        "url": "https://api.twitter.com/2/tweets/search/recent",
-        "method": "GET",
-        "responseFormat": "json"
-      }
+      ]
     },
     {
+      "parameters": {
+        "functionCode": "// Placeholder for normalization and scoring\nreturn items;"
+      },
       "id": "7",
       "name": "Normalize & Score",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        900,
+        1000,
         400
-      ],
-      "parameters": {
-        "functionCode": "// Consolidate platform results to a common structure\nconst items = [];\nitems.push(...itemsFlat);\n// TODO: implement normalization\nreturn items;"
-      }
+      ]
     },
     {
+      "parameters": {
+        "operation": "insert",
+        "collection": "content_items",
+        "fields": []
+      },
       "id": "8",
       "name": "Store Content",
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        1150,
+        1250,
         400
-      ],
-      "parameters": {
-        "operation": "insert",
-        "collection": "content_items"
-      }
+      ]
     }
   ],
   "connections": {
@@ -138,23 +155,17 @@
             "node": "YouTube Search",
             "type": "main",
             "index": 0
-          }
-        ],
-        [
+          },
           {
             "node": "TikTok Search",
             "type": "main",
             "index": 0
-          }
-        ],
-        [
+          },
           {
             "node": "IG Hashtag Search",
             "type": "main",
             "index": 0
-          }
-        ],
-        [
+          },
           {
             "node": "Twitter Search",
             "type": "main",
@@ -221,6 +232,6 @@
   },
   "settings": {},
   "active": false,
-  "versionId": "6160d5d2-fb31-495d-b56b-be98fe2297a7",
-  "id": "96167fd8-7fd0-4f0f-b374-9787b1746de3"
+  "versionId": "af88b0e5-d8db-497a-81ea-e6c73e95e082",
+  "id": "f3baa44e-316f-4445-b2c9-42ac9e274b64"
 }
