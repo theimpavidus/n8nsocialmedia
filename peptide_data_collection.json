@@ -140,14 +140,12 @@
       "parameters": {
         "operation": "insert",
         "collection": "content_items",
-        "fieldsUi": {
-          "field": [
-            { "name": "platform", "value": "{{ $json.platform }}" },
-            { "name": "title", "value": "{{ $json.title }}" },
-            { "name": "url", "value": "{{ $json.url }}" },
-            { "name": "score", "value": "{{ $json.score }}" },
-            { "name": "timestamp", "value": "{{ $now }}" }
-          ]
+        "fields": {
+          "platform": "{{ $json.platform }}",
+          "title": "{{ $json.title }}",
+          "url": "{{ $json.url }}",
+          "score": "{{ $json.score }}",
+          "timestamp": "{{ $now }}"
         }
       },
       "id": "8",
