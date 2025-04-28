@@ -13,10 +13,7 @@
       "name": "DC Cron",
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
-      "position": [
-        250,
-        300
-      ]
+      "position": [250, 300]
     },
     {
       "parameters": {
@@ -26,10 +23,7 @@
       "name": "Generate Terms",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        450,
-        300
-      ]
+      "position": [450, 300]
     },
     {
       "parameters": {
@@ -37,7 +31,11 @@
         "method": "GET",
         "responseFormat": "json",
         "queryParametersUi": {
-          "parameter": []
+          "parameter": [
+            { "name": "part", "value": "snippet" },
+            { "name": "q", "value": "{{ $json.searchTerms[0] }}" },
+            { "name": "maxResults", "value": "10" }
+          ]
         },
         "options": {}
       },
@@ -45,10 +43,13 @@
       "name": "YouTube Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        700,
-        200
-      ]
+      "position": [700, 200],
+      "credentials": {
+        "googleApi": {
+          "id": "youtube-credential-id",
+          "name": "Google API"
+        }
+      }
     },
     {
       "parameters": {
@@ -56,7 +57,10 @@
         "method": "GET",
         "responseFormat": "json",
         "queryParametersUi": {
-          "parameter": []
+          "parameter": [
+            { "name": "q", "value": "{{ $json.searchTerms[0] }}" },
+            { "name": "limit", "value": "10" }
+          ]
         },
         "options": {}
       },
@@ -64,10 +68,13 @@
       "name": "TikTok Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        700,
-        350
-      ]
+      "position": [700, 350],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tiktok-credential-id",
+          "name": "TikTok API Key"
+        }
+      }
     },
     {
       "parameters": {
@@ -75,7 +82,10 @@
         "method": "GET",
         "responseFormat": "json",
         "queryParametersUi": {
-          "parameter": []
+          "parameter": [
+            { "name": "q", "value": "{{ $json.searchTerms[0] }}" },
+            { "name": "user_id", "value": "YOUR_USER_ID" }
+          ]
         },
         "options": {}
       },
@@ -83,10 +93,13 @@
       "name": "IG Hashtag Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        700,
-        500
-      ]
+      "position": [700, 500],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "instagram-credential-id",
+          "name": "Instagram OAuth2"
+        }
+      }
     },
     {
       "parameters": {
@@ -94,7 +107,10 @@
         "method": "GET",
         "responseFormat": "json",
         "queryParametersUi": {
-          "parameter": []
+          "parameter": [
+            { "name": "query", "value": "{{ $json.searchTerms[0] }}" },
+            { "name": "max_results", "value": "10" }
+          ]
         },
         "options": {}
       },
@@ -102,38 +118,49 @@
       "name": "Twitter Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [
-        700,
-        650
-      ]
+      "position": [700, 650],
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "twitter-credential-id",
+          "name": "Twitter OAuth2"
+        }
+      }
     },
     {
       "parameters": {
-        "functionCode": "// Placeholder for normalization and scoring\nreturn items;"
+        "functionCode": "const normalizedItems = [];\n\n// Process YouTube results\nif (items[0] && items[0].json.items) {\n  items[0].json.items.forEach(item => {\n    normalizedItems.push({\n      json: {\n        platform: 'YouTube',\n        title: item.snippet.title,\n        url: `https://www.youtube.com/watch?v=${item.id.videoId}`,\n        score: 1 // Placeholder scoring\n      }\n    });\n  });\n}\n\n// Process TikTok results\nif (items[1] && items[1].json.data) {\n  items[1].json.data.forEach(item => {\n    normalizedItems.push({\n      json: {\n        platform: 'TikTok',\n        title: item.title || 'No title',\n        url: item.url || 'No URL',\n        score: 1 // Placeholder scoring\n      }\n    });\n  });\n}\n\n// Process Instagram results\nif (items[2] && items[2].json.data) {\n  items[2].json.data.forEach(item => {\n    normalizedItems.push({\n      json: {\n        platform: 'Instagram',\n        title: item.name || 'No title',\n        url: `https://www.instagram.com/explore/tags/${item.name}/`,\n        score: 1 // Placeholder scoring\n      }\n    });\n  });\n}\n\n// Process Twitter results\nif (items[3] && items[3].json.data) {\n  items[3].json.data.forEach(item => {\n    normalizedItems.push({\n      json: {\n        platform: 'Twitter',\n        title: item.text,\n        url: `https://twitter.com/i/status/${item.id}`,\n        score: 1 // Placeholder scoring\n      }\n    });\n  });\n}\n\nreturn normalizedItems;"
       },
       "id": "7",
       "name": "Normalize & Score",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1000,
-        400
-      ]
+      "position": [1000, 400]
     },
     {
       "parameters": {
         "operation": "insert",
         "collection": "content_items",
-        "fields": []
+        "fieldsUi": {
+          "field": [
+            { "name": "platform", "value": "{{ $json.platform }}" },
+            { "name": "title", "value": "{{ $json.title }}" },
+            { "name": "url", "value": "{{ $json.url }}" },
+            { "name": "score", "value": "{{ $json.score }}" },
+            { "name": "timestamp", "value": "{{ $now }}" }
+          ]
+        }
       },
       "id": "8",
       "name": "Store Content",
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
-      "position": [
-        1250,
-        400
-      ]
+      "position": [1250, 400],
+      "credentials": {
+        "mongoDb": {
+          "id": "mongodb-credential-id",
+          "name": "MongoDB"
+        }
+      }
     }
   ],
   "connections": {
@@ -230,8 +257,11 @@
       ]
     }
   },
-  "settings": {},
+  "settings": {
+    "timezone": "UTC",
+    "errorWorkflow": ""
+  },
   "active": false,
-  "versionId": "af88b0e5-d8db-497a-81ea-e6c73e95e082",
-  "id": "f3baa44e-316f-4445-b2c9-42ac9e274b64"
+  "versionId": "83e22087-88c8-4b8b-9afa-e322c5343554",
+  "id": "066b836f-1e38-4619-8994-e93bb91829b9"
 }
